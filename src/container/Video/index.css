@@ -1,0 +1,12 @@
+.video-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.video-player {
+  height: 70%;
+  width: 100%;
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+}

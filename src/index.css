@@ -1,0 +1,23 @@
+html,
+body,
+#root,
+.App {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+.text-16 {
+  font-size: 16px;
+  color: #2d2d3a;
+}
+
+.text-14 {
+  font-size: 14px;
+  color: #2d2d3a;
+}
+
+.text-12 {
+  font-size: 12px;
+  color: #ababb0;
+}

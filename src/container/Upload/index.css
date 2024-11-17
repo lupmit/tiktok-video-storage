@@ -1,0 +1,134 @@
+.wrapper {
+  background-color: #e7e7e7e7;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.container {
+  min-width: 600px;
+  border-radius: 24px;
+  background-color: #ffffff;
+  padding: 24px 40px 33px 40px;
+}
+
+.title {
+  margin-bottom: 16px;
+  font-weight: 700;
+}
+
+.upload-space {
+  height: 120px;
+  border-radius: 16px;
+  border-width: 2px;
+  border-style: dashed;
+  border-color: #4433ff;
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+
+.upload-space.error {
+  border-color: #fa5151;
+}
+
+.upload-space.disabled {
+  border-color: #bdbdbd;
+  color: #dbdbdb;
+  cursor: not-allowed;
+}
+
+.upload-space.disabled:hover {
+  border-style: dashed;
+}
+
+.upload-space.disabled .text-14 {
+  color: #dbdbdb;
+}
+
+.upload-space.disabled path {
+  stroke: #dbdbdb;
+}
+
+.upload-space.disabled ~ .note {
+  color: #dbdbdb;
+}
+
+.upload-space:hover {
+  border-style: solid;
+}
+
+.upload-space .upload-space-wrapper {
+  margin: 44px 20px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 9px;
+}
+
+.note {
+  margin-bottom: 40px;
+}
+
+.note.error {
+  color: #fa5151;
+}
+
+.history {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: 400px;
+  overflow-y: scroll;
+}
+
+.history .history-item {
+  border-radius: 12px;
+  border: solid 1px #d5d5d8;
+  padding: 16px 24px;
+}
+
+.history .history-item .file-information {
+  margin-bottom: 4px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 9px;
+}
+
+.history .history-item .status {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.history .history-item .file-information.uploaded {
+  cursor: pointer;
+}
+
+.history .history-item .file-information.uploaded:hover > .file-name {
+  text-decoration-style: solid;
+  text-decoration-line: underline;
+}
+
+.history .history-item .progress {
+  width: 100%;
+  margin-top: 16px;
+}
+
+progress[value]::-webkit-progress-value {
+  transition: width 3s ease;
+}
+
+@media (max-width: 700px) {
+  .container {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .history .history-item .status > a {
+    width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
