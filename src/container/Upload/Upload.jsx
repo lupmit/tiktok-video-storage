@@ -22,7 +22,7 @@ const Upload = () => {
 
   useEffect(() => {
     const load = async () => {
-      const baseURL = "https://unpkg.com/@ffmpeg/core-mt@0.12.6/dist/esm";
+      const baseURL = "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.11.0/dist";
       const ffmpeg = ffmpegRef.current;
       ffmpeg.on("log", ({ message }) => {
         console.log(message);
