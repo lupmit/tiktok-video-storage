@@ -10,8 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@ffmpeg/ffmpeg": "^0.12.10",
-    "@ffmpeg/util": "^0.12.1",
+    "@ffmpeg/ffmpeg": "0.11.6",
+    "@originjs/vite-plugin-commonjs": "^1.0.3",
     "artplayer": "^5.2.1",
     "axios": "^1.7.7",
     "buffer": "^6.0.3",
@@ -20,6 +20,7 @@
     "react-dom": "^18.3.1",
     "react-dropzone": "^14.3.5",
     "react-router-dom": "^6.28.0",
+    "vite-plugin-commonjs": "^0.10.3",
     "vite-plugin-svgr": "^4.3.0"
   },
   "devDependencies": {

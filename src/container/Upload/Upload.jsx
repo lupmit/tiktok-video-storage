@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { FFmpeg } from "@ffmpeg/ffmpeg";
-import { fetchFile, toBlobURL } from "@ffmpeg/util";
+import { createFFmpeg, fetchFile } from "@ffmpeg/ffmpeg";
 import axios from "axios";
 import { Buffer } from "buffer";
 import { useNavigate } from "react-router-dom";
@@ -12,7 +11,7 @@ import FileUploaded from "../../assets/file-uploaded.svg?react";
 import "./index.css";
 
 const Upload = () => {
-  const ffmpegRef = useRef(new FFmpeg());
+  const ffmpegRef = useRef(createFFmpeg({ log: true }));
   const [error, setError] = useState(false);
   const [currentUpload, setCurrentUpload] = useState();
   const navigate = useNavigate();
@@ -22,25 +21,15 @@ const Upload = () => {
 
   useEffect(() => {
     const load = async () => {
-      const baseURL = "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.11.0/dist";
-      const ffmpeg = ffmpegRef.current;
-      ffmpeg.on("log", ({ message }) => {
+      const baseURL = "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.11.6/dist";
+      let ffmpeg = ffmpegRef.current;
+      ffmpeg.setLogger(({ message }) => {
         console.log(message);
       });
-      ffmpegRef.current.terminate();
       await ffmpeg.load({
-        coreURL: await toBlobURL(
-          `${baseURL}/ffmpeg-core.js`,
-          "text/javascript"
-        ),
-        wasmURL: await toBlobURL(
-          `${baseURL}/ffmpeg-core.wasm`,
-          "application/wasm"
-        ),
-        workerURL: await toBlobURL(
-          `${baseURL}/ffmpeg-core.worker.js`,
-          "text/javascript"
-        ),
+        coreURL: `${baseURL}/ffmpeg-core.js`,
+        wasmURL: `${baseURL}/ffmpeg-core.wasm`,
+        workerURL: `${baseURL}/ffmpeg-core.worker.js`,
       });
 
       setLoading(false);
@@ -177,8 +166,8 @@ const Upload = () => {
       };
     });
     const ffmpeg = ffmpegRef.current;
-    await ffmpeg.writeFile("input.mp4", await fetchFile(file));
-    await ffmpeg.exec([
+    await ffmpeg.FS("writeFile", "input.mp4", await fetchFile(file));
+    await ffmpeg.run(
       "-i",
       "input.mp4",
       "-codec:",
@@ -191,9 +180,9 @@ const Upload = () => {
       "0",
       "-f",
       "hls",
-      "output.m3u8",
-    ]);
-    const m3u8Data = await ffmpeg.readFile("output.m3u8");
+      "output.m3u8"
+    );
+    const m3u8Data = await ffmpeg.FS("readFile", "output.m3u8");
     const m3u8Unit = new Uint8Array(m3u8Data);
     let m3u8Text = await new Blob([m3u8Unit.buffer]).text();
 
@@ -201,7 +190,7 @@ const Upload = () => {
     let index = 0;
     while (true) {
       try {
-        const tsData = await ffmpeg.readFile(`output${index}.ts`);
+        const tsData = await ffmpeg.FS("readFile", `output${index}.ts`);
         tsFiles.push({ data: tsData, name: `output${index}.ts` });
         index++;
       } catch (e) {
