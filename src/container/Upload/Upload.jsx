@@ -5,6 +5,7 @@ import { fetchFile, toBlobURL } from "@ffmpeg/util";
 import axios from "axios";
 import { Buffer } from "buffer";
 import { useNavigate } from "react-router-dom";
+import Loading from "../../component/Loading/Loading";
 import FileIcon from "../../assets/file-icon.svg?react";
 import FileUploading from "../../assets/file-uploading.svg?react";
 import FileUploaded from "../../assets/file-uploaded.svg?react";
@@ -16,6 +17,36 @@ const Upload = () => {
   const [currentUpload, setCurrentUpload] = useState();
   const navigate = useNavigate();
   const historyData = JSON.parse(localStorage.getItem("history")) || [];
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const load = async () => {
+      const baseURL = "https://unpkg.com/@ffmpeg/core-mt@0.12.6/dist/esm";
+      const ffmpeg = ffmpegRef.current;
+      ffmpeg.on("log", ({ message }) => {
+        console.log(message);
+      });
+      ffmpegRef.current.terminate();
+      await ffmpeg.load({
+        coreURL: await toBlobURL(
+          `${baseURL}/ffmpeg-core.js`,
+          "text/javascript"
+        ),
+        wasmURL: await toBlobURL(
+          `${baseURL}/ffmpeg-core.wasm`,
+          "application/wasm"
+        ),
+        workerURL: await toBlobURL(
+          `${baseURL}/ffmpeg-core.worker.js`,
+          "text/javascript"
+        ),
+      });
+
+      setLoading(false);
+    };
+    load();
+  }, []);
 
   useEffect(() => {
     if (currentUpload && currentUpload.progress === 100) {
@@ -48,26 +79,6 @@ const Upload = () => {
     onDrop,
     disabled: Boolean(currentUpload),
   });
-
-  const load = async () => {
-    const baseURL = "https://unpkg.com/@ffmpeg/core-mt@0.12.6/dist/esm";
-    const ffmpeg = ffmpegRef.current;
-    ffmpeg.on("log", ({ message }) => {
-      console.log(message);
-    });
-    ffmpegRef.current.terminate();
-    await ffmpeg.load({
-      coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript"),
-      wasmURL: await toBlobURL(
-        `${baseURL}/ffmpeg-core.wasm`,
-        "application/wasm"
-      ),
-      workerURL: await toBlobURL(
-        `${baseURL}/ffmpeg-core.worker.js`,
-        "text/javascript"
-      ),
-    });
-  };
 
   const uploadFiles = async (files) => {
     const formData = new FormData();
@@ -159,9 +170,13 @@ const Upload = () => {
   };
 
   const transcode = async (file) => {
-    await load();
+    setCurrentUpload((prev) => {
+      return {
+        ...prev,
+        progress: 20,
+      };
+    });
     const ffmpeg = ffmpegRef.current;
-    const fileName = file.name;
     await ffmpeg.writeFile("input.mp4", await fetchFile(file));
     await ffmpeg.exec([
       "-i",
@@ -178,13 +193,6 @@ const Upload = () => {
       "hls",
       "output.m3u8",
     ]);
-
-    setCurrentUpload((prev) => {
-      return {
-        ...prev,
-        progress: 20,
-      };
-    });
     const m3u8Data = await ffmpeg.readFile("output.m3u8");
     const m3u8Unit = new Uint8Array(m3u8Data);
     let m3u8Text = await new Blob([m3u8Unit.buffer]).text();
@@ -253,6 +261,7 @@ const Upload = () => {
 
   return (
     <div className="wrapper">
+      {loading && <Loading />}
       <div className="container">
         <div className="title text-16">Upload video</div>
         <div
