@@ -44,6 +44,10 @@ const Video = () => {
       },
     });
 
+    // Thêm thuộc tính crossorigin vào thẻ video
+    const videoElement = artRef.current.$video;
+    videoElement.setAttribute("crossorigin", "anonymous");
+
     return () => {
       if (artRef.current && artRef.current.destroy) {
         artRef.current.destroy(false);
