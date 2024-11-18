@@ -3,11 +3,10 @@
   justify-content: center;
   align-items: center;
   height: 100%;
-  flex-direction: column;
 }
 
 .video-player {
+  height: 70%;
   width: 100%;
-  height: 50%;
   border: 1px dashed rgba(255, 255, 255, 0.1);
 }

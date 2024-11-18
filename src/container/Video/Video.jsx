@@ -9,54 +9,6 @@ const Video = () => {
   const playerRef = useRef();
   const { videoID } = useParams();
 
-  const videoRef = useRef(null);
-
-  useEffect(() => {
-    const videoUrl = `https://stream.lupmit.workers.dev/${videoID}`;
-    // Kiểm tra xem trình duyệt có hỗ trợ HLS hay không
-    if (Hls.isSupported()) {
-      const hls = new Hls();
-
-      // Khi video tải được, bắt đầu phát
-      hls.loadSource(videoUrl);
-
-      // Liên kết hls với video element
-      hls.attachMedia(videoRef.current);
-
-      hls.on(Hls.Events.MANIFEST_PARSED, () => {
-        console.log("Manifest parsed!");
-      });
-
-      hls.on(Hls.Events.ERROR, (event, data) => {
-        if (data.fatal) {
-          switch (data.type) {
-            case Hls.ErrorTypes.NETWORK_ERROR:
-              console.error("HLS network error");
-              break;
-            case Hls.ErrorTypes.MEDIA_ERROR:
-              console.error("HLS media error");
-              break;
-            case Hls.ErrorTypes.OTHER_ERROR:
-              console.error("HLS other error");
-              break;
-            default:
-              console.error("Unknown error");
-              break;
-          }
-        }
-      });
-
-      // Clean up khi component bị unmount
-      return () => {
-        if (hls) {
-          hls.destroy();
-        }
-      };
-    } else if (videoRef.current.canPlayType("application/vnd.apple.mpegurl")) {
-      videoRef.current.src = videoUrl;
-    }
-  }, [videoID]);
-
   useEffect(() => {
     if (artRef.current) {
       artRef.current.destroy(false);
@@ -102,12 +54,6 @@ const Video = () => {
   return (
     <div className="video-wrapper">
       <div className="video-player" ref={playerRef}></div>
-      <video
-        ref={videoRef}
-        controls
-        style={{ width: "100%", height: "auto" }}
-        onError={(e) => console.error("Video playback error", e)}
-      />
     </div>
   );
 };
