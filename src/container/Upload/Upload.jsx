@@ -264,7 +264,7 @@ const Upload = () => {
     <div className="wrapper">
       {loading && <Loading />}
       <div className="container">
-        <div className="title text-16">Upload video</div>
+        <div className="title text-16">Video uploader</div>
         <div
           className={`upload-space ${error && "error"} ${
             Boolean(currentUpload) && "disabled"
@@ -277,7 +277,9 @@ const Upload = () => {
             <div className="icon">
               <FileIcon />
             </div>
-            <div className="text-14">Kéo thả file của bạn ở đây</div>
+            <div className="text-14">
+              Click to browse or drag and drop your files
+            </div>
           </div>
         </div>
         <div className={`note text-12 ${error && "error"}`}>
@@ -316,8 +318,15 @@ const Upload = () => {
               </div>
               <div className="status text-12">
                 <span> Stream link:</span>
-                <a href="#" target="blank">
-                  {item.stream}
+                <a
+                  href={`https://stream.lupmit.workers.dev/${item.stream
+                    .split("/")
+                    .pop()}`}
+                  target="blank"
+                >
+                  {`https://stream.lupmit.workers.dev/${item.stream
+                    .split("/")
+                    .pop()}`}
                 </a>
               </div>
             </div>
