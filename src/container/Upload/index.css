@@ -106,6 +106,10 @@
   cursor: pointer;
 }
 
+.history .history-item .file-information .file-name {
+  word-break: break-word;
+}
+
 .history .history-item .file-information.uploaded:hover > .file-name {
   text-decoration-style: solid;
   text-decoration-line: underline;
@@ -132,7 +136,6 @@ progress[value]::-webkit-progress-value {
 
   .history .history-item .status > a {
     width: 200px;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    word-break: break-word;
   }
 }

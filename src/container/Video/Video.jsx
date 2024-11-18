@@ -25,6 +25,7 @@ const Video = () => {
       hotkey: true,
       pip: true,
       autoSize: true,
+      fastForward: true,
       crossorigin: "anonymous",
       customType: {
         m3u8: (video, url, art) => {
