@@ -73,6 +73,7 @@ const Video = () => {
       hotkey: true,
       pip: true,
       autoSize: true,
+      crossorigin: "anonymous",
       customType: {
         m3u8: (video, url, art) => {
           if (Hls.isSupported()) {
