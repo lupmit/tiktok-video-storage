@@ -28,6 +28,7 @@ const Video = () => {
       crossorigin: "anonymous",
       customType: {
         m3u8: (video, url, art) => {
+          video.setAttribute("crossorigin", "anonymous");
           if (Hls.isSupported()) {
             if (art.hls) art.hls.destroy();
             const hls = new Hls();
@@ -43,10 +44,6 @@ const Video = () => {
         },
       },
     });
-
-    // Thêm thuộc tính crossorigin vào thẻ video
-    const videoElement = artRef.current.$video;
-    videoElement.setAttribute("crossorigin", "anonymous");
 
     return () => {
       if (artRef.current && artRef.current.destroy) {
