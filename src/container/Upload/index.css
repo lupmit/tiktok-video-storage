@@ -126,6 +126,10 @@ progress[value]::-webkit-progress-value {
     min-width: unset;
   }
 
+  .history .history-item .status {
+    flex-direction: column;
+  }
+
   .history .history-item .status > a {
     width: 200px;
     overflow: hidden;
