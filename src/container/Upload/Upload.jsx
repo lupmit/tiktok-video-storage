@@ -26,6 +26,18 @@ const Upload = () => {
       ffmpeg.setLogger(({ message }) => {
         console.log(message);
       });
+
+      ffmpeg.setProgress(({ ratio }) => {
+        setCurrentUpload((prev) => {
+          return {
+            ...prev,
+            progress: (ratio * 100) / 2,
+          };
+        });
+      });
+
+      if (ffmpegRef.current.isLoaded()) return;
+
       await ffmpeg.load({
         coreURL: `${baseURL}/ffmpeg-core.js`,
         wasmURL: `${baseURL}/ffmpeg-core.wasm`,
@@ -35,6 +47,12 @@ const Upload = () => {
       setLoading(false);
     };
     load();
+
+    return () => {
+      if (ffmpegRef.current.isLoaded()) {
+        ffmpegRef.current.exit();
+      }
+    };
   }, []);
 
   useEffect(() => {
@@ -159,12 +177,6 @@ const Upload = () => {
   };
 
   const transcode = async (file) => {
-    setCurrentUpload((prev) => {
-      return {
-        ...prev,
-        progress: 20,
-      };
-    });
     const ffmpeg = ffmpegRef.current;
     await ffmpeg.FS("writeFile", "input.mp4", await fetchFile(file));
     await ffmpeg.run(
@@ -201,7 +213,7 @@ const Upload = () => {
     setCurrentUpload((prev) => {
       return {
         ...prev,
-        progress: 50,
+        progress: 70,
       };
     });
 
@@ -228,7 +240,7 @@ const Upload = () => {
     setCurrentUpload((prev) => {
       return {
         ...prev,
-        progress: 70,
+        progress: 80,
       };
     });
 
